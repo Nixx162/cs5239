@@ -145,8 +145,8 @@ fig_us_case = px.choropleth_mapbox(
     color='CasesPer100K',
     color_continuous_scale='Viridis',
     mapbox_style='carto-positron',
-    zoom=2.5,
-    center={'lat': 37.0902, 'lon': -95.7129},
+    zoom=1.85,
+    center={'lat': 55, 'lon': -120},
     opacity=0.5,
     labels={'CasesPer100K': 'Cases Per 100K'},
     range_color=(0, 40000),
@@ -198,16 +198,14 @@ fig_us_death = px.choropleth_mapbox(
     color='DeathsPer100K',
     color_continuous_scale='Viridis',
     mapbox_style='carto-positron',
-    zoom=2.5,
-    center={'lat': 37.0902, 'lon': -95.7129},
+    zoom=1.85,
+    center={'lat': 55, 'lon': -120},
     opacity=0.5,
     labels={'DeathsPer100K': 'Deaths Per 100K'},
     range_color=(0, 500),
 )
 fig_us_death.update_layout(margin={'r':0, 't':0, 'l':0, 'b':0})
 st.plotly_chart(fig_us_death)
-
-
 
 # Plotly Choropleth Mapbox for Canada Deaths Per 100K
 fig_can_death = px.choropleth_mapbox(

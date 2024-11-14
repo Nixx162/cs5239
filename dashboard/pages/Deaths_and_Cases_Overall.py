@@ -55,7 +55,7 @@ fig_deaths = px.line(combined_df, x='Date', y='DeathsPerCapita', color='Country'
                      labels={'DeathsPerCapita': 'Deaths Per 100K Population'})
 st.plotly_chart(fig_deaths)
 
-st.title("COVID-19 Daily Case and Death Rates Per 100K Over Time: U.S. vs Canada")
+st.title("COVID-19 Daily Case and Death Rates Per 100K Population Over Time: U.S. vs Canada")
 
 # Plot DailyCaseRate for both countries (scatter plot)
 fig_daily_cases = px.scatter(combined_df, x='Date', y='DailyCaseRate', color='Country', 
