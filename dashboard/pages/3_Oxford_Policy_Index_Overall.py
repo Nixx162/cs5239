@@ -2,69 +2,49 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.express as px  # Added for boxplots
 
-# Load and prepare U.S. data
 us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
-
-# Select required columns, including the indexes
-us_df = us_df[['CountryName', 'Date', 'ConfirmedCases', 'ConfirmedDeaths',
-               'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
+us_df = us_df[us_df['Jurisdiction'] == "NAT_TOTAL"]
+us_df = us_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
 us_df = us_df.dropna()
 us_df['Date'] = pd.to_datetime(us_df['Date'], format='%Y%m%d')
-
-# Group by Date and calculate mean for indexes, sum for cases and deaths
-us_df_grouped = us_df.groupby('Date').agg({
-    'ConfirmedCases': 'sum',
-    'ConfirmedDeaths': 'sum',
-    'GovernmentResponseIndex_WeightedAverage': 'mean',
-    'StringencyIndex_WeightedAverage': 'mean',
-    'ContainmentHealthIndex_WeightedAverage': 'mean',
-    'EconomicSupportIndex': 'mean'
-}).reset_index()
 us_population = 331_000_000  # U.S. population
-us_df_grouped['Country'] = 'US'
+us_df['CasesPerCapita'] = us_df['ConfirmedCases'] / us_population * 100_000
+us_df['DeathsPerCapita'] = us_df['ConfirmedDeaths'] / us_population * 100_000
+us_df['Country'] = 'US'
 
-# Calculate daily case and death rates for U.S.
-us_df_grouped['DailyCaseRate'] = us_df_grouped['ConfirmedCases'].diff().fillna(0)
-us_df_grouped['DailyDeathRate'] = us_df_grouped['ConfirmedDeaths'].diff().fillna(0)
-us_df_grouped['DailyCaseRate'] = us_df_grouped['DailyCaseRate'].apply(lambda x: max(0, x) / us_population * 100_000)
-us_df_grouped['DailyDeathRate'] = us_df_grouped['DailyDeathRate'].apply(lambda x: max(0, x) / us_population * 100_000)
+us_df['DailyCaseRate'] = us_df['ConfirmedCases'].diff().fillna(0)
+us_df['DailyDeathRate'] = us_df['ConfirmedDeaths'].diff().fillna(0)
+us_df['DailyCaseRate'] = us_df['DailyCaseRate'].apply(lambda x: max(0, x) / us_population * 100_000)
+us_df['DailyDeathRate'] = us_df['DailyDeathRate'].apply(lambda x: max(0, x) / us_population * 100_000)
 
-# Load and prepare Canada data
+us_df_grouped = us_df
+
 can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
-
-# Select required columns, including the indexes
-can_df = can_df[['CountryName', 'Date', 'ConfirmedCases', 'ConfirmedDeaths',
-                 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
-                 'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
+can_df = can_df[can_df['Jurisdiction'] == "NAT_TOTAL"]
+can_df = can_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
+               'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
 can_df = can_df.dropna()
 can_df['Date'] = pd.to_datetime(can_df['Date'], format='%Y%m%d')
+can_population = 38_000_000  # U.S. population
+can_df['CasesPerCapita'] = can_df['ConfirmedCases'] / can_population * 100_000
+can_df['DeathsPerCapita'] = can_df['ConfirmedDeaths'] / can_population * 100_000
+can_df['Country'] = 'Canada'
 
-# Group by Date and calculate mean for indexes, sum for cases and deaths
-can_df_grouped = can_df.groupby('Date').agg({
-    'ConfirmedCases': 'sum',
-    'ConfirmedDeaths': 'sum',
-    'GovernmentResponseIndex_WeightedAverage': 'mean',
-    'StringencyIndex_WeightedAverage': 'mean',
-    'ContainmentHealthIndex_WeightedAverage': 'mean',
-    'EconomicSupportIndex': 'mean'
-}).reset_index()
-can_population = 38_000_000  # Canada population
-can_df_grouped['Country'] = 'Canada'
+# Calculate daily case and death rates for U.S.
+can_df['DailyCaseRate'] = can_df['ConfirmedCases'].diff().fillna(0)
+can_df['DailyDeathRate'] = can_df['ConfirmedDeaths'].diff().fillna(0)
+can_df['DailyCaseRate'] = can_df['DailyCaseRate'].apply(lambda x: max(0, x) / can_population * 100_000)
+can_df['DailyDeathRate'] = can_df['DailyDeathRate'].apply(lambda x: max(0, x) / can_population * 100_000)
 
-# Calculate daily case and death rates for Canada
-can_df_grouped['DailyCaseRate'] = can_df_grouped['ConfirmedCases'].diff().fillna(0)
-can_df_grouped['DailyDeathRate'] = can_df_grouped['ConfirmedDeaths'].diff().fillna(0)
-can_df_grouped['DailyCaseRate'] = can_df_grouped['DailyCaseRate'].apply(lambda x: max(0, x) / can_population * 100_000)
-can_df_grouped['DailyDeathRate'] = can_df_grouped['DailyDeathRate'].apply(lambda x: max(0, x) / can_population * 100_000)
+can_df_grouped = can_df
 
 # Combine U.S. and Canada data
 combined_df = pd.concat([us_df_grouped, can_df_grouped])
 
-st.title("COVID-19 Daily Case and Death Rates Per 100K Population and Policy Index Over Time: U.S. vs Canada")
-
-st.header("Government Response Index (Overall Index)")
+st.header("Government Response Index")
 
 # ------------------ First Plot ------------------
 # Daily case rate with GovernmentResponseIndex_WeightedAverage
@@ -77,11 +57,11 @@ for country in ['US', 'Canada']:
             x=country_data['Date'],
             y=country_data['DailyCaseRate'],
             mode='markers',
-            name=f"{country} Daily Case Rate"
+            name=f"{country} Daily Case Count"
         ),
         secondary_y=False
     )
-    # Add GovernmentResponseIndex_WeightedAverage as line plot
+    # Add Government Response Index as line plot
     fig_cases_gov.add_trace(
         go.Scatter(
             x=country_data['Date'],
@@ -94,10 +74,10 @@ for country in ['US', 'Canada']:
 
 # Update layout for first plot
 fig_cases_gov.update_xaxes(title_text="Date")
-fig_cases_gov.update_yaxes(title_text="Daily Case Rate per 100K", secondary_y=False)
+fig_cases_gov.update_yaxes(title_text="Daily Case Count per 100K", secondary_y=False)
 fig_cases_gov.update_yaxes(title_text="Government Response Index", secondary_y=True)
 fig_cases_gov.update_layout(
-    title_text="Daily COVID-19 Case Rate and Government Response Index Over Time",
+    title_text="Daily COVID-19 Case Count and Government Response Index Over Time",
     legend=dict(
         orientation="h",
         yanchor="bottom",
@@ -122,11 +102,11 @@ for country in ['US', 'Canada']:
             x=country_data['Date'],
             y=country_data['DailyDeathRate'],
             mode='markers',
-            name=f"{country} Daily Death Rate"
+            name=f"{country} Daily Death Count"
         ),
         secondary_y=False
     )
-    # Add GovernmentResponseIndex_WeightedAverage as line plot
+    # Add Government Response Index as line plot
     fig_deaths_gov.add_trace(
         go.Scatter(
             x=country_data['Date'],
@@ -139,10 +119,10 @@ for country in ['US', 'Canada']:
 
 # Update layout for second plot
 fig_deaths_gov.update_xaxes(title_text="Date")
-fig_deaths_gov.update_yaxes(title_text="Daily Death Rate per 100K", secondary_y=False)
+fig_deaths_gov.update_yaxes(title_text="Daily Death Count per 100K", secondary_y=False)
 fig_deaths_gov.update_yaxes(title_text="Government Response Index", secondary_y=True)
 fig_deaths_gov.update_layout(
-    title_text="Daily COVID-19 Death Rate and Government Response Index Over Time",
+    title_text="Daily COVID-19 Death Count and Government Response Index Over Time",
     legend=dict(
         orientation="h",
         yanchor="bottom",
@@ -156,17 +136,31 @@ fig_deaths_gov.update_layout(
 
 st.plotly_chart(fig_deaths_gov)
 
+# --- Added Boxplot of Government Response Index ---
+st.subheader("Distribution of Government Response Index Values")
+
+# Prepare data for boxplot
+boxplot_data = pd.concat([
+    us_df_grouped[['Date', 'GovernmentResponseIndex_WeightedAverage']].assign(Country='US'),
+    can_df_grouped[['Date', 'GovernmentResponseIndex_WeightedAverage']].assign(Country='Canada')
+])
+
+# Create boxplot
+fig_box_gov = px.box(
+    boxplot_data,
+    x='Country',
+    y='GovernmentResponseIndex_WeightedAverage',
+    title='Boxplot of Government Response Index: U.S. vs Canada',
+    labels={'GovernmentResponseIndex_WeightedAverage': 'Government Response Index'}
+)
+st.plotly_chart(fig_box_gov)
+
+# --- Added Selectbox and Boxplot for Other Indexes ---
 st.header("Stringency, Containment Health, Economic Support Indexes")
+
 # ------------------ Third Plot ------------------
 # Daily case rate with selectable indexes using checkboxes
 st.text("Select Indexes to Display with Daily Case Rate")
-
-# Define index options
-index_options = {
-    'Stringency Index': 'StringencyIndex_WeightedAverage',
-    'Containment Health Index': 'ContainmentHealthIndex_WeightedAverage',
-    'Economic Support Index': 'EconomicSupportIndex'
-}
 
 # Create checkboxes for each index
 display_stringency = st.checkbox('Stringency Index', value=True)
@@ -299,3 +293,38 @@ if selected_indexes_death:
     st.plotly_chart(fig_deaths_indexes)
 else:
     st.write("Please select at least one index to display.")
+
+# Before third plot: Add selectbox to choose an index for boxplot
+st.subheader("Distribution of Selected Index Values")
+
+# Define index options for selectbox
+index_options = {
+    'Stringency Index': 'StringencyIndex_WeightedAverage',
+    'Containment Health Index': 'ContainmentHealthIndex_WeightedAverage',
+    'Economic Support Index': 'EconomicSupportIndex'
+}
+
+# Create selectbox
+selected_index_name = st.selectbox(
+    'Select an Index to Display Boxplot:',
+    options=list(index_options.keys()),
+    index=0  # Default to 'Stringency Index'
+)
+
+selected_index = index_options[selected_index_name]
+
+# Prepare data for boxplot
+boxplot_index_data = pd.concat([
+    us_df_grouped[['Date', selected_index]].assign(Country='US'),
+    can_df_grouped[['Date', selected_index]].assign(Country='Canada')
+])
+
+# Create boxplot for selected index
+fig_box_index = px.box(
+    boxplot_index_data,
+    x='Country',
+    y=selected_index,
+    title=f'Boxplot of {selected_index_name}: U.S. vs Canada',
+    labels={selected_index: selected_index_name}
+)
+st.plotly_chart(fig_box_index)
