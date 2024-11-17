@@ -115,7 +115,7 @@ can_df['ProvinceName'] = can_df['ProvinceName'].replace({
     # Add any other adjustments if needed
 })
 
-st.title("Regionwise COVID-19 Cumulative Case Counts Per 100K Over Time: U.S. vs Canada")
+st.header("Regionwise COVID-19 Cumulative Case Counts Per 100K Over Time: U.S. vs Canada")
 
 # Define the date range for the slider
 min_date = pd.to_datetime("2020-01-01")
@@ -172,7 +172,7 @@ fig_can_case = px.choropleth_mapbox(
 fig_can_case.update_layout(margin={'r':0, 't':0, 'l':0, 'b':0})
 st.plotly_chart(fig_can_case)
 
-st.title("Regionwise COVID-19 Cumulative Death Counts Per 100K Over Time: U.S. vs Canada")
+st.header("Regionwise COVID-19 Cumulative Death Counts Per 100K Over Time: U.S. vs Canada")
 
 # Create a date slider
 chosen_date_death = st.slider(
