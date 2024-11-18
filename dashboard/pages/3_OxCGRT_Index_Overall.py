@@ -28,7 +28,7 @@ can_df = can_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentRespons
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
 can_df = can_df.dropna()
 can_df['Date'] = pd.to_datetime(can_df['Date'], format='%Y%m%d')
-can_population = 38_000_000  # U.S. population
+can_population = 38_000_000  #CAN population
 can_df['CasesPerCapita'] = can_df['ConfirmedCases'] / can_population * 100_000
 can_df['DeathsPerCapita'] = can_df['ConfirmedDeaths'] / can_population * 100_000
 can_df['Country'] = 'Canada'
