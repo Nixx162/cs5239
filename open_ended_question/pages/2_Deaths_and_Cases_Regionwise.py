@@ -5,7 +5,7 @@ import requests
 from datetime import datetime
 
 # Load U.S. data
-us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
 us_df = us_df[['RegionCode', 'Date', 'ConfirmedCases', 'ConfirmedDeaths']].dropna()
 us_df['Date'] = pd.to_datetime(us_df['Date'], format='%Y%m%d')
 us_df['RegionCode'] = us_df['RegionCode'].str[3:]  # Remove 'US_' prefix
@@ -57,7 +57,7 @@ for feature in us_geojson['features']:
     feature['properties']['StateName'] = feature['properties']['name']
 
 # Load Canada data
-can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 can_df = can_df[['RegionCode', 'Date', 'ConfirmedCases', 'ConfirmedDeaths']].dropna()
 can_df['Date'] = pd.to_datetime(can_df['Date'], format='%Y%m%d')
 can_df['RegionCode'] = can_df['RegionCode'].str[4:]  # Remove 'CAN_' prefix

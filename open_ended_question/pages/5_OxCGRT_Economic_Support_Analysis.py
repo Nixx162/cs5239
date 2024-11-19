@@ -5,7 +5,7 @@ from plotly.subplots import make_subplots
 from scipy.stats import spearmanr
 import dcor
 
-us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
 us_df = us_df[us_df["Jurisdiction"] == "NAT_TOTAL"]
 us_population = 331_000_000 
 us_df['DailyCaseRate'] = us_df['ConfirmedCases'].diff().fillna(0)
@@ -13,7 +13,7 @@ us_df['DailyDeathRate'] = us_df['ConfirmedDeaths'].diff().fillna(0)
 us_df['DailyCaseRate'] = us_df['DailyCaseRate'].apply(lambda x: max(0, x) / us_population * 100_000)
 us_df['DailyDeathRate'] = us_df['DailyDeathRate'].apply(lambda x: max(0, x) / us_population * 100_000)
 
-can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 can_df = can_df[can_df["Jurisdiction"] == "NAT_TOTAL"]
 can_population = 331_000_000 
 can_df['DailyCaseRate'] = can_df['ConfirmedCases'].diff().fillna(0)

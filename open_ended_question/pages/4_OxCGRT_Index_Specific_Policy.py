@@ -101,8 +101,8 @@ index_explanations = {
 
 # Load and prepare U.S. data
 us_population = 331_000_000  # U.S. population
-us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
-us_raw = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_raw = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
 us_df = us_df[us_df['Jurisdiction'] == "NAT_TOTAL"]
 us_df = us_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
@@ -123,8 +123,8 @@ us_df_grouped['DailyDeathRate'] = us_df_grouped['DailyDeathRate'].apply(lambda x
 
 # Load and prepare Canada data
 can_population = 38_000_000  #CAN population
-can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
-can_raw = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_raw = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 can_df = can_df[can_df['Jurisdiction'] == "NAT_TOTAL"]
 can_df = can_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]

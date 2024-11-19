@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load and prepare U.S. data
-us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
 us_df = us_df[us_df['Jurisdiction'] == "NAT_TOTAL"]
 us_df = us_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths']]
 us_df = us_df.dropna()
@@ -20,7 +20,7 @@ us_df['DailyCaseRate'] = us_df['DailyCaseRate'].apply(lambda x: max(0, x) / us_p
 us_df['DailyDeathRate'] = us_df['DailyDeathRate'].apply(lambda x: max(0, x) / us_population * 100_000)
 
 # Load and prepare Canada data
-can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 can_df = can_df[can_df['Jurisdiction'] == "NAT_TOTAL"]
 can_df = can_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths']]
 can_df = can_df.dropna()

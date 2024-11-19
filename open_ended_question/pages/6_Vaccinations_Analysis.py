@@ -3,9 +3,9 @@ import numpy as np
 import streamlit as st
 import plotly.express as px
 
-all_vaccinations_data_df = pd.read_csv("../data/vaccinations.csv")
-us_policy_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
-canada_policy_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+all_vaccinations_data_df = pd.read_csv("./data/vaccinations.csv")
+us_policy_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
+canada_policy_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 
 us_policy_df = us_policy_df[us_policy_df["Jurisdiction"] == "NAT_TOTAL"]
 us_policy_df["date"] = pd.to_datetime(us_policy_df["Date"], format="%Y%m%d")

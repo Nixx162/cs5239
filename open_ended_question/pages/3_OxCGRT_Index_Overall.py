@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.express as px  # Added for boxplots
 
-us_df = pd.read_csv("../data/OxCGRT_fullwithnotes_USA_v1.csv")
+us_df = pd.read_csv("./data/OxCGRT_fullwithnotes_USA_v1.csv")
 us_df = us_df[us_df['Jurisdiction'] == "NAT_TOTAL"]
 us_df = us_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]
@@ -22,7 +22,7 @@ us_df['DailyDeathRate'] = us_df['DailyDeathRate'].apply(lambda x: max(0, x) / us
 
 us_df_grouped = us_df
 
-can_df = pd.read_csv("../data/OxCGRT_fullwithnotes_CAN_v1.csv")
+can_df = pd.read_csv("./data/OxCGRT_fullwithnotes_CAN_v1.csv")
 can_df = can_df[can_df['Jurisdiction'] == "NAT_TOTAL"]
 can_df = can_df[['Date', 'ConfirmedCases', 'ConfirmedDeaths', 'GovernmentResponseIndex_WeightedAverage', 'StringencyIndex_WeightedAverage',
                'ContainmentHealthIndex_WeightedAverage', 'EconomicSupportIndex']]

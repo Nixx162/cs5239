@@ -2,7 +2,7 @@ import streamlit as st
 
 # App title and description
 st.title("CS5239 Project 6")
-st.write("Analysis and Visualization of the Effects of Government Policies in the United States and Canada")
+st.write("Analysis and Visualization of the Effects of Government Policies on Covid-19 Cases and Deaths in the United States and Canada")
 
 # Table of contents
 st.subheader("Table of Contents")
